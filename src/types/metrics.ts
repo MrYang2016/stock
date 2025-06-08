@@ -2,6 +2,9 @@ export interface StockMetric {
   peBasicExclExtraTTM?: number;
   epsBasicExclExtraItemsTTM?: number;
   marketCapitalization?: number;
+  roe5Y?: number;
+  roeRfy?: number;
+  roeTTM?: number;
   // Add other metrics as needed
 }
 

@@ -85,7 +85,7 @@ const StockMetricsCard: React.FC<StockMetricsCardProps> = ({
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
         <div className="bg-gray-50 rounded-lg p-3 sm:p-4">
           <p className="metric-label">P/E Ratio (TTM)</p>
           {peRatio ? (
@@ -134,6 +134,20 @@ const StockMetricsCard: React.FC<StockMetricsCardProps> = ({
           )}
           <p className="text-xs text-gray-500 mt-1">
             Total market value of the company
+          </p>
+        </div>
+
+        <div className="bg-gray-50 rounded-lg p-3 sm:p-4">
+          <p className="metric-label">ROE (TTM)</p>
+          {metrics.metric?.roeTTM ? (
+            <p className="metric-value text-xl sm:text-2xl lg:text-3xl">
+              {metrics.metric.roeTTM.toFixed(2)}%
+            </p>
+          ) : (
+            <p className="metric-value text-xl sm:text-2xl lg:text-3xl text-gray-400">N/A</p>
+          )}
+          <p className="text-xs text-gray-500 mt-1">
+            Return on equity, trailing twelve months
           </p>
         </div>
       </div>
