@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useQuery } from 'react-query';
 import { fetchFundList } from '../services/api';
+import { ChevronLeft, ChevronRight, ArrowUpRight, ArrowDownRight } from 'lucide-react';
 
 interface Fund {
   id: number;
@@ -20,13 +21,20 @@ interface FundListResponse {
 }
 
 const FundList: React.FC = () => {
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 10;
+
   const { data, isLoading, isError } = useQuery<FundListResponse>(
-    ['fundList', 1],
-    () => fetchFundList(1, 10),
+    ['fundList', currentPage],
+    () => fetchFundList(currentPage, pageSize),
     {
       staleTime: 5 * 60 * 1000, // 5 minutes
     }
   );
+
+  const handlePageChange = (newPage: number) => {
+    setCurrentPage(newPage);
+  };
 
   if (isLoading) {
     return (
@@ -51,10 +59,57 @@ const FundList: React.FC = () => {
     );
   }
 
+  const renderFundCard = (fund: Fund) => (
+    <div key={fund.id} className="bg-white border border-gray-200 rounded-lg p-4 hover:bg-gray-50">
+      <div className="flex justify-between items-start mb-2">
+        <div>
+          <h3 className="text-base font-medium text-gray-900">{fund.name}</h3>
+          <p className="text-sm text-gray-500">{fund.code}</p>
+        </div>
+        <span className="text-xs px-2 py-1 bg-gray-100 text-gray-600 rounded-full">{fund.type}</span>
+      </div>
+      <div className="grid grid-cols-2 gap-4 mt-3">
+        <div>
+          <p className="text-xs text-gray-500 mb-1">近1年收益率</p>
+          <div className="flex items-center">
+            <span className={`text-sm font-medium ${Number(fund.yield1N) >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+              {fund.yield1N}%
+            </span>
+            {Number(fund.yield1N) >= 0 ? (
+              <ArrowUpRight className="w-4 h-4 text-green-600 ml-1" />
+            ) : (
+              <ArrowDownRight className="w-4 h-4 text-red-600 ml-1" />
+            )}
+          </div>
+        </div>
+        <div>
+          <p className="text-xs text-gray-500 mb-1">今年以来收益率</p>
+          <div className="flex items-center">
+            <span className={`text-sm font-medium ${Number(fund.yieldY) >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+              {fund.yieldY}%
+            </span>
+            {Number(fund.yieldY) >= 0 ? (
+              <ArrowUpRight className="w-4 h-4 text-green-600 ml-1" />
+            ) : (
+              <ArrowDownRight className="w-4 h-4 text-red-600 ml-1" />
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
   return (
     <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
       <h2 className="text-xl font-semibold text-gray-900 mb-4">基金列表</h2>
-      <div className="overflow-x-auto">
+
+      {/* 移动端：卡片布局 */}
+      <div className="sm:hidden space-y-3">
+        {data?.data.map(renderFundCard)}
+      </div>
+
+      {/* 桌面端：表格布局 */}
+      <div className="hidden sm:block overflow-x-auto">
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
             <tr>
@@ -86,6 +141,34 @@ const FundList: React.FC = () => {
           </tbody>
         </table>
       </div>
+
+      {/* 分页控件 */}
+      {data && (
+        <div className="flex flex-col sm:flex-row items-center justify-between mt-4 gap-4">
+          <div className="text-sm text-gray-700">
+            显示第 {(currentPage - 1) * pageSize + 1} 到 {Math.min(currentPage * pageSize, data.total)} 条，共 {data.total} 条
+          </div>
+          <div className="flex items-center space-x-2">
+            <button
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPage === 1}
+              className="p-2 border border-gray-300 rounded-md disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
+            >
+              <ChevronLeft className="w-5 h-5" />
+            </button>
+            <span className="text-sm text-gray-700">
+              第 {currentPage} 页，共 {data.totalPages} 页
+            </span>
+            <button
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={currentPage === data.totalPages}
+              className="p-2 border border-gray-300 rounded-md disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
+            >
+              <ChevronRight className="w-5 h-5" />
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
