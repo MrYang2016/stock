@@ -109,7 +109,7 @@ export const calculateFundMetrics = (fundStocks: FundStock[]): FundMetrics => {
 // 获取基金收益率数据
 export const fetchFundPerformance = async (fundCode: string) => {
   try {
-    const baseUrl = import.meta.env.VITE_API_URL || 'http://127.0.0.1:3004';
+    const baseUrl = import.meta.env.VITE_API_URL || 'https://it-news.aries-happy.com';
 
     const response = await axios.get(`${baseUrl}/stock/fund-performance`, {
       params: {
@@ -125,7 +125,7 @@ export const fetchFundPerformance = async (fundCode: string) => {
 };
 
 export const fetchFundList = async (page: number, pageSize: number) => {
-  const baseUrl = import.meta.env.VITE_API_URL || 'http://127.0.0.1:3004';
+  const baseUrl = import.meta.env.VITE_API_URL || 'https://it-news.aries-happy.com';
 
   const response = await fetch(`${baseUrl}/stock/fund-list?page=${page}&pageSize=${pageSize}`);
   if (!response.ok) {
