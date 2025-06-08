@@ -9,7 +9,8 @@ interface Fund {
   name: string;
   type: string;
   yield1N: string;
-  yieldY: string;
+  yield3N: string;
+  yield5N: string;
 }
 
 interface FundListResponse {
@@ -68,7 +69,7 @@ const FundList: React.FC = () => {
         </div>
         <span className="text-xs px-2 py-1 bg-gray-100 text-gray-600 rounded-full">{fund.type}</span>
       </div>
-      <div className="grid grid-cols-2 gap-4 mt-3">
+      <div className="grid grid-cols-3 gap-4 mt-3">
         <div>
           <p className="text-xs text-gray-500 mb-1">近1年收益率</p>
           <div className="flex items-center">
@@ -83,12 +84,25 @@ const FundList: React.FC = () => {
           </div>
         </div>
         <div>
-          <p className="text-xs text-gray-500 mb-1">今年以来收益率</p>
+          <p className="text-xs text-gray-500 mb-1">近3年收益率</p>
           <div className="flex items-center">
-            <span className={`text-sm font-medium ${Number(fund.yieldY) >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-              {fund.yieldY}%
+            <span className={`text-sm font-medium ${Number(fund.yield3N) >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+              {fund.yield3N}%
             </span>
-            {Number(fund.yieldY) >= 0 ? (
+            {Number(fund.yield3N) >= 0 ? (
+              <ArrowUpRight className="w-4 h-4 text-green-600 ml-1" />
+            ) : (
+              <ArrowDownRight className="w-4 h-4 text-red-600 ml-1" />
+            )}
+          </div>
+        </div>
+        <div>
+          <p className="text-xs text-gray-500 mb-1">近5年收益率</p>
+          <div className="flex items-center">
+            <span className={`text-sm font-medium ${Number(fund.yield5N) >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+              {fund.yield5N}%
+            </span>
+            {Number(fund.yield5N) >= 0 ? (
               <ArrowUpRight className="w-4 h-4 text-green-600 ml-1" />
             ) : (
               <ArrowDownRight className="w-4 h-4 text-red-600 ml-1" />
@@ -117,7 +131,8 @@ const FundList: React.FC = () => {
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">基金名称</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">基金类型</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">近1年收益率</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">今年以来收益率</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">近3年收益率</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">近5年收益率</th>
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
@@ -132,8 +147,13 @@ const FundList: React.FC = () => {
                   </span>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm">
-                  <span className={`${Number(fund.yieldY) >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                    {fund.yieldY}%
+                  <span className={`${Number(fund.yield3N) >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                    {fund.yield3N}%
+                  </span>
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm">
+                  <span className={`${Number(fund.yield5N) >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                    {fund.yield5N}%
                   </span>
                 </td>
               </tr>
