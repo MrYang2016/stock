@@ -109,7 +109,9 @@ export const calculateFundMetrics = (fundStocks: FundStock[]): FundMetrics => {
 // 获取基金收益率数据
 export const fetchFundPerformance = async (fundCode: string) => {
   try {
-    const response = await axios.get('http://127.0.0.1:3004/stock/fund-performance', {
+    const baseUrl = import.meta.env.VITE_API_URL || 'http://127.0.0.1:3004';
+
+    const response = await axios.get(`${baseUrl}/stock/fund-performance`, {
       params: {
         fundCode: fundCode,
       },
@@ -123,7 +125,9 @@ export const fetchFundPerformance = async (fundCode: string) => {
 };
 
 export const fetchFundList = async (page: number, pageSize: number) => {
-  const response = await fetch(`http://127.0.0.1:3004/stock/fund-list?page=${page}&pageSize=${pageSize}`);
+  const baseUrl = import.meta.env.VITE_API_URL || 'http://127.0.0.1:3004';
+
+  const response = await fetch(`${baseUrl}/stock/fund-list?page=${page}&pageSize=${pageSize}`);
   if (!response.ok) {
     throw new Error('Failed to fetch fund list');
   }
